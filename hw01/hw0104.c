@@ -1,3 +1,17 @@
+/*  
+    Warning: Here includes piles of confusing and nonsense code
+
+    I've tried to make my code be able to deal with any ridiculous input,
+    but eventually, it turned into a chaos.
+    My code became not readable nor being able to process some input,
+    and I spent a lot of time to make it workable at least.
+
+    In conclusion, DO NOT TRY TO COMPREHEND MY CODE BY YOURSELF,
+    and DONT ASK ME WHY THE DUCK CAN THIS TRASH WORKING,
+    because I will probably forget what I'm doing in a few days too.
+    Coding by yourself may be a better option than reading this.
+
+*/
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -11,7 +25,7 @@ typedef struct item{
     int32_t index;  //type 1:doesnt have subset, type 2:have subset,
 } element;          //type -1:note as end sign
 
-int32_t element_num(char* now,int32_t arrayLayer);
+int32_t element_num(char* now,int32_t arrayLayer);  //to calculate how many space does a layer need
 
 int32_t element_num(char* now,int32_t arrayLayer){
     int32_t ans = 0;
@@ -62,6 +76,8 @@ int main(){
 
     printf("Please enter the JSON string:\n");
     fgets(json,2049,stdin);
+
+    //building the chart
 
     for(int32_t i = 0;i < strlen(json);i++){
         if(json[i] == '{'){
@@ -140,7 +156,7 @@ int main(){
         else if(isWord || (json[i] >= '0' && json[i] <= '9')) buf[buf_idx++] = json[i];
     }
 
-    now = head;
+    //now = head;
 
     // while(now->type != -1 || now->sub != NULL){
     //     if(now->type == 1){
@@ -153,6 +169,8 @@ int main(){
     //         printf("switch\n");
     //     }
     // }
+
+    //search part
 
     do{
 
