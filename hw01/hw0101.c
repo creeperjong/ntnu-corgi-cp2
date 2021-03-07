@@ -11,6 +11,8 @@ int main(){
     char ans[1024] = "";
     char** garbage = NULL;
 
+    printf("Please enter the hex string: ");
+
     do{
         fgets(hex,3,stdin);
 
