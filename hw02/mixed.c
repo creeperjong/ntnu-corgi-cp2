@@ -126,3 +126,49 @@ void mixed_sub(sMixedNumber* pNumber, const sMixedNumber r1, const sMixedNumber 
     
     return;
 }
+
+void mixed_mul(sMixedNumber *pNumber, const sMixedNumber r1, const sMixedNumber r2){
+    
+    if(!check(&r1) || !check(&r2)){
+        printf("Error\n");
+        return;
+    }
+
+    sMixedNumber r1tmp = (sMixedNumber)r1;
+    sMixedNumber r2tmp = (sMixedNumber)r2;
+
+    if(r1tmp.whole < 0) r1tmp.numberator = r1tmp.whole * r1tmp.denominator - r1tmp.numberator;
+    else r1tmp.numberator = r1tmp.whole * r1tmp.denominator + r1tmp.numberator;
+    if(r2tmp.whole < 0) r2tmp.numberator = r2tmp.whole * r2tmp.denominator - r2tmp.numberator;
+    else r2tmp.numberator = r2tmp.whole * r2tmp.denominator + r2tmp.numberator;
+
+    pNumber->whole = 0;
+    pNumber->denominator = r1tmp.denominator * r2tmp.denominator;
+    pNumber->numberator = r1tmp.numberator * r2tmp.numberator;
+    simply(pNumber);
+    
+    return;
+}
+
+void mixed_div(sMixedNumber *pNumber, const sMixedNumber r1, const sMixedNumber r2){
+    
+    if(!check(&r1) || !check(&r2)){
+        printf("Error\n");
+        return;
+    }
+
+    sMixedNumber r1tmp = (sMixedNumber)r1;
+    sMixedNumber r2tmp = (sMixedNumber)r2;
+
+    if(r1tmp.whole < 0) r1tmp.numberator = r1tmp.whole * r1tmp.denominator - r1tmp.numberator;
+    else r1tmp.numberator = r1tmp.whole * r1tmp.denominator + r1tmp.numberator;
+    if(r2tmp.whole < 0) r2tmp.numberator = r2tmp.whole * r2tmp.denominator - r2tmp.numberator;
+    else r2tmp.numberator = r2tmp.whole * r2tmp.denominator + r2tmp.numberator;
+
+    pNumber->whole = 0;
+    pNumber->denominator = r1tmp.denominator * r2tmp.numberator;
+    pNumber->numberator = r1tmp.numberator * r2tmp.denominator;
+    simply(pNumber);
+    
+    return;
+}
