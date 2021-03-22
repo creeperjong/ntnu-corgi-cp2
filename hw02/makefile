@@ -8,4 +8,4 @@ mixed:
 bignum:
 	gcc -c bignum.c -o bignum.o
 clean:
-	rm -rf *.o hw0201 hw0202 hw0203
+	rm -rf *.o hw0201 hw0202 hw0203 hw0204
