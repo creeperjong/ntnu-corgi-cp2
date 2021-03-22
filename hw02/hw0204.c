@@ -38,9 +38,9 @@ int main()
     multiply( &ans, a, b );
     print( ans );
 
-    // divide( &q, &r, a, b );
-    // print( q );
-    // print( r );
+    divide( &q, &r, a, b );
+    print( q );
+    print( r );
 
     // power( &ans, 20, 10 );
     // print( ans );
@@ -49,8 +49,4 @@ int main()
     // print( ans );
 
     return 0;
-}
-
-void divide( sBigNum *pQuotient , sBigNum *pRemainder , const sBigNum num01 , const sBigNum num02 ){
-    
 }
