@@ -108,7 +108,7 @@ void add( sBigNum *pResult ,const sBigNum num01 , const sBigNum num02 ){
 
     //Initialize
 
-    memset(pResult->val,0,sizeof(pResult->val));
+    memset(pResult->val,0,1025);
     
     //align(&num01tmp,&num02tmp);
     if(num01tmp.digit >= num02tmp.digit) max_digit = num01tmp.digit;
@@ -147,7 +147,7 @@ void subtract( sBigNum *pResult , const sBigNum num01 , const sBigNum num02 ){
 
     //Initialize
 
-    memset(pResult->val,0,sizeof(pResult->val));
+    memset(pResult->val,0,1025);
 
     if(num01tmp.pn == 1 && num02tmp.pn == 1){
         if(compare(num01tmp,num02tmp) == -1){
@@ -205,7 +205,7 @@ void multiply( sBigNum *pResult , const sBigNum num01 , const sBigNum num02 ){
 
     //Initialize
 
-    memset(pResult->val,0,sizeof(pResult->val));
+    memset(pResult->val,0,1025);
 
     if(num01tmp.digit >= num02tmp.digit) max_digit = num01tmp.digit;
     if(num01tmp.digit < num02tmp.digit) max_digit = num02tmp.digit;
@@ -270,8 +270,8 @@ void divide( sBigNum *pQuotient , sBigNum *pRemainder , const sBigNum num01 , co
 
     //Initialize
 
-    memset(pQuotient->val,0,sizeof(pQuotient->val));
-    memset(pRemainder->val,0,sizeof(pRemainder->val));
+    memset(pQuotient->val,0,1025);
+    memset(pRemainder->val,0,1025);
     num01tmp.pn = 1;
     num01tmp.pn = 1;
     one.val[0] = '1';
@@ -320,4 +320,45 @@ void divide( sBigNum *pQuotient , sBigNum *pRemainder , const sBigNum num01 , co
     }
 
     return;
+}
+
+int32_t power( sBigNum *pResult , int32_t n, int32_t k ){
+    
+    sBigNum p = {
+        .val = "",
+        .digit = 0,
+        .pn = 1
+    };
+    char string[12] = "";
+    int32_t isOdd = 0;
+
+    if(k < 0) return 0;
+
+    //Initialize
+
+    memset(pResult->val,0,1025);
+    pResult->val[0] = 1 _toASCII;
+    pResult->digit = 1;
+    pResult->pn = 1;
+    if(k == 0) return 1;
+
+    snprintf(string,12,"%d",n);
+    set(&p,string);
+    if(n < 0) p.pn = 1;
+
+    if(k % 2 == 1) isOdd = 1;
+
+
+    while(k != 0){
+        if(k & 1){
+            multiply(pResult,*pResult,p);
+        }
+        multiply(&p,p,p);
+        k >>= 1;
+    }
+
+    pResult->digit = strlen(pResult->val);
+    if(n < 0 && isOdd) pResult->pn = -1;
+
+    return 1;
 }

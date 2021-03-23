@@ -42,8 +42,8 @@ int main()
     print( q );
     print( r );
 
-    // power( &ans, 20, 10 );
-    // print( ans );
+    power( &ans, 27, 17 );
+    print( ans );
 
     // combine( &ans, 20, 10 );
     // print( ans );
