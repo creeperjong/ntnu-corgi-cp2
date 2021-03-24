@@ -1,28 +1,5 @@
 #include "bignum.h"
 
-void align( sBigNum *num01 , sBigNum *num02 ){
-
-    int32_t diff = 0;
-    char tmp[1025] = "";
-
-    if(num01->digit == num02->digit) return;
-    if(num01->digit > num02->digit){
-        diff = num01->digit - num02->digit;
-        strncpy(tmp,num02->val,num02->digit);
-        memset(num02->val,0,sizeof(num02->val));
-        strncpy(&num02->val[diff],tmp,num02->digit);
-        memset(num02->val,'0',diff);
-    }
-    if(num01->digit < num02->digit){
-        diff = num02->digit - num01->digit;
-        strncpy(tmp,num01->val,num01->digit);
-        memset(num01->val,0,sizeof(num01->val));
-        strncpy(&num01->val[diff],tmp,num01->digit);
-        memset(num01->val,'0',diff);
-    }
-    return;
-}
-
 void print( const sBigNum num ){
     if(num.pn == -1) printf("-");
     for(int32_t i = num.digit - 1;i >= 0;i--) printf("%c",num.val[i]);
@@ -63,28 +40,13 @@ int32_t compare( const sBigNum num01 , const sBigNum num02 ){
     if(num01.pn == -1 && num01.digit > num02.digit) return -1;
     if(num01.pn == 1 && num01.digit < num02.digit) return -1;
     if(num01.pn == -1 && num01.digit < num02.digit) return 1;
-
-    //Positive
-
-    if(num01.pn == 1){
-        for(int32_t i = num01.digit - 1;i >= 0;i--){
-            if(num01.val[i] == num02.val[i]) continue;
-            if(num01.val[i] > num02.val[i]) return 1;
-            if(num01.val[i] < num02.val[i]) return -1;
-        }
-        return 0;
+ 
+    for(int32_t i = num01.digit - 1;i >= 0;i--){
+        if(num01.val[i] == num02.val[i]) continue;
+        else if(num01.val[i] > num02.val[i]) return 1 * num01.pn;
+        else if(num01.val[i] < num02.val[i]) return -1 * num01.pn;
     }
-
-    //Negative
-
-    if(num01.pn == -1){
-        for(int32_t i = num01.digit - 1;i >= 0;i--){
-            if(num01.val[i] == num02.val[i]) continue;
-            if(num01.val[i] > num02.val[i]) return -1;
-            if(num01.val[i] < num02.val[i]) return 1;
-        }
-        return 0;
-    }
+    return 0;
 }
 
 int32_t digits( const sBigNum num ){
@@ -273,7 +235,7 @@ void divide( sBigNum *pQuotient , sBigNum *pRemainder , const sBigNum num01 , co
     memset(pQuotient->val,0,1025);
     memset(pRemainder->val,0,1025);
     num01tmp.pn = 1;
-    num01tmp.pn = 1;
+    num02tmp.pn = 1;
     one.val[0] = '1';
 
     memset(multi_10.val,'0',num01tmp.digit);
@@ -359,6 +321,84 @@ int32_t power( sBigNum *pResult , int32_t n, int32_t k ){
 
     pResult->digit = strlen(pResult->val);
     if(n < 0 && isOdd) pResult->pn = -1;
+
+    return 1;
+}
+
+int32_t combine( sBigNum *pResult , int32_t n, int32_t k ){
+    if(n == 0) return 0;
+    if(k < 0 || n < 0) return 0;
+    if(k > n) return 0;
+    
+    sBigNum numerator = {
+        .val = "",
+        .digit = 0,
+        .pn = 1
+    };
+    sBigNum denominator = {
+        .val = "",
+        .digit = 0,
+        .pn = 1
+    };
+    sBigNum multi = {
+        .val = "",
+        .digit = 0,
+        .pn = 1
+    };
+    sBigNum factorial_n = {
+        .val = "",
+        .digit = 0,
+        .pn = 1
+    };
+    sBigNum factorial_nk = {
+        .val = "",
+        .digit = 0,
+        .pn = 1
+    };
+    sBigNum factorial_k = {
+        .val = "",
+        .digit = 0,
+        .pn = 1
+    };
+    sBigNum one = {
+        .val = "",
+        .digit = 1,
+        .pn = 1
+    };
+    char string[12] = "";
+
+    //Initialize
+
+    memset(pResult->val,0,1025);
+    set(&numerator,"1");
+    set(&denominator,"1");
+    set(&multi,"1");
+    set(&one,"1");
+
+    if(k > (n / 2)) k = n - k;
+    
+    if(k == 0){
+        *(pResult) = one;
+        return 1;
+    }
+
+    snprintf(string,11,"%d",n);
+    set(&factorial_n,string);
+    snprintf(string,11,"%d",k);
+    set(&factorial_k,string);
+    snprintf(string,11,"%d",n-k);
+    set(&factorial_nk,string);
+
+    while(compare(multi,factorial_k) <= 0){
+        multiply(&denominator,denominator,multi);
+        add(&multi,multi,one);
+    }
+    multi = factorial_n;
+    while(compare(multi,factorial_nk) > 0){
+        multiply(&numerator,numerator,multi);
+        subtract(&multi,multi,one);
+    }
+    divide(pResult,&one,numerator,denominator);
 
     return 1;
 }

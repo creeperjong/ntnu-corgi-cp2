@@ -1,12 +1,13 @@
 #include <stdio.h>
 #include <stdint.h>
 #include "bignum.h"
+#include <time.h>
 
 int main()
 {
     sBigNum a, b;
-    set( &a, "123" );
-    set( &b, "99" );
+    set( &a, "-7431446" );
+    set( &b, "-97" );
 
     print( a );
     print( b );
@@ -20,7 +21,7 @@ int main()
         printf( "Comparison Fail.\n" );
     }
 
-    if( digits( a ) == 3 )
+    if( digits( a ) == 7 )
     {
         printf( "Digits Pass.\n" );
     }
@@ -45,8 +46,8 @@ int main()
     power( &ans, 27, 17 );
     print( ans );
 
-    // combine( &ans, 20, 10 );
-    // print( ans );
+    combine( &ans, 20, 1 );
+    print( ans );
 
     return 0;
 }
