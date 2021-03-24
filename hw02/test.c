@@ -1,10 +1,23 @@
 #include <stdio.h>
-#include <stdio.h>
+#include <stdint.h>
 
-int main(){
-    char string[10] = "";
-    snprintf(string,9,"1232344");
-    snprintf(string,9,"56");
+int main()
+{
+    int32_t number = 0;
 
-    printf("%s\n",string);
+    scanf( "%d", & number );
+
+    uint32_t bit = 1;
+    bit = bit << 31;
+
+    for( int i = 0 ; i < 32 ; i++ )
+    {
+        if( bit & number )
+            printf( "1" );
+        else
+            printf( "0" );
+        bit = bit >> 1;
+    }
+    printf("\n");
+    return 0;
 }
