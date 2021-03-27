@@ -46,7 +46,7 @@ int main()
     power( &ans, 27, 17 );
     print( ans );
 
-    combine( &ans, 20, 1 );
+    combine( &ans, 1000, 500 );
     print( ans );
 
     return 0;
