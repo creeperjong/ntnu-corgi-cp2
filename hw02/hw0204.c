@@ -6,8 +6,8 @@
 int main()
 {
     sBigNum a, b;
-    set( &a, "-7431446" );
-    set( &b, "-97" );
+    set( &a, "123" );
+    set( &b, "99" );
 
     print( a );
     print( b );
@@ -21,7 +21,7 @@ int main()
         printf( "Comparison Fail.\n" );
     }
 
-    if( digits( a ) == 7 )
+    if( digits( a ) == 3 )
     {
         printf( "Digits Pass.\n" );
     }
@@ -43,10 +43,10 @@ int main()
     print( q );
     print( r );
 
-    power( &ans, 27, 17 );
+    power( &ans, 20, 10 );
     print( ans );
 
-    combine( &ans, 1000, 500 );
+    combine( &ans, 20, 10 );
     print( ans );
 
     return 0;
