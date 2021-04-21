@@ -58,6 +58,11 @@ int main(){
 
     fread(&header,sizeof(sHeader),1,origin_bmp);
 
+    if(header.bpp != 24){
+        printf("Error: The bpp is not 24.\n");
+        return 0;
+    }
+
     //BITMAPV3INFOHEADER
     //Addtional 16 bytes for rgba masks
 
