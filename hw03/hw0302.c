@@ -31,9 +31,8 @@ void calculate_the_data(FILE* record,sTeam* team_data,char* the_most_scoring_gap
     int32_t max_gap = INT32_MIN;
     int32_t firstLine = 1;
 
-    while(!feof(record)){
+    while(fgets(nowData,512,record) != NULL){
 
-        fgets(nowData,512,record);
         nowData[strlen(nowData) - 1] = 0;
         
         if(firstLine){  //skip the first line

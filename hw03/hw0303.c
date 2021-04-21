@@ -34,6 +34,8 @@ int main(){
     int32_t pixel_per_offset = 0;
     sHeader header = {0};
 
+    //Open the files
+
     printf("Please input a BMP file: ");
     fgets(input_filename,32,stdin);
     input_filename[strlen(input_filename) - 1] = 0;
@@ -57,6 +59,8 @@ int main(){
     printf("Angle (0-90): ");
     scanf("%d",&ang);
 
+    //process special cases (ang = 0 or ang = 90)
+
     if(ang == 0){
         
         uint8_t* row_modified = NULL;
@@ -69,13 +73,13 @@ int main(){
 
         col_modified = header.width * 3 + header.width % 4;
         row_modified = (uint8_t*)malloc(sizeof(uint8_t) * col_modified);
-        for(int32_t i = 0;i < col_modified;i++) row_modified[i] = 0;
+        for(int32_t i = 0;i < col_modified;i++) row_modified[i] = 0;    //all black
 
         fwrite(row_modified,1,col_modified,distort_bmp);
         return 0;
     }
 
-    if(ang == 90){
+    if(ang == 90){  //copy the bmp
 
         fread(&header,sizeof(sHeader),1,origin_bmp);
         fwrite(&header,sizeof(sHeader),1,distort_bmp);
@@ -90,8 +94,16 @@ int main(){
         return 0;
     }
 
+    /* 
+        Strategy: construct an coordinate system which (0,0) is at the first pixel
+        and (x,y) = (column,row)
+        find an equation that passed through (0,0) and the slope is equal to tan(angle)
+        Once you find the point which is on the right side of the equation when scanning each row
+        you can start to copy the pixels
+    */
+
     double m = 0;
-    m = tan(ang * M_PI / 180.0);
+    m = tan(ang * M_PI / 180.0);    //slope
 
     fread(&header,sizeof(sHeader),1,origin_bmp);
     shift = (int32_t)(header.height * (1.0 / m));
@@ -102,17 +114,17 @@ int main(){
     int32_t col_modified = 0;
     uint8_t* row_origin = NULL;
     uint8_t* row_modified = NULL;
-    col_origin = (header.width - shift) * 3 + (header.width - shift) % 4;
+    
+    col_origin = (header.width - shift) * 3 + (header.width - shift) % 4;   //+ mod 4 because it requires multiples of 4 bytes
     col_modified = header.width * 3 + header.width % 4;
     row_origin = (uint8_t*)malloc(sizeof(uint8_t) * col_origin);
     row_modified = (uint8_t*)malloc(sizeof(uint8_t) * col_modified);
 
     for(int32_t i = 0;i < header.height;i++){
         fread(row_origin,1,col_origin,origin_bmp);
-        for(int32_t j = 0;j < col_modified;j++) row_modified[j] = 255;
+        for(int32_t j = 0;j < col_modified;j++) row_modified[j] = 255;  //padding
         for(int32_t j = 0;j < col_modified;j = j + 3){
             if(m * j / 3 - i >= 0.0){
-                // printf("%d %d\n",i,j);
                 for(int32_t k = 0;k < col_origin;k++) row_modified[j+k] = row_origin[k];
                 fwrite(row_modified,1,col_modified,distort_bmp);
                 break;
