@@ -122,7 +122,7 @@ int main(){
 
     for(int32_t i = 0;i < header.height;i++){
         fread(row_origin,1,col_origin,origin_bmp);
-        for(int32_t j = 0;j < col_modified;j++) row_modified[j] = 255;  //padding
+        for(int32_t j = 0;j < col_modified;j++) row_modified[j] = 255;  //filling with white pixel
         for(int32_t j = 0;j < col_modified;j = j + 3){
             if(m * j / 3 - i >= 0.0){
                 for(int32_t k = 0;k < col_origin;k++) row_modified[j+k] = row_origin[k];
