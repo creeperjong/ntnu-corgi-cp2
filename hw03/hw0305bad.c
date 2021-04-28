@@ -61,13 +61,12 @@ void general(uint8_t* savedata, int32_t nowIdx, uint64_t filesize, int32_t year)
     uint16_t formation = 0;
     int32_t formerIdx = 0;
     int32_t latterIdx = 0;
-    int32_t isActive = 0;
 
     while(1){
         printf("\nPlease enter the following value of the target character according to the given format\n");
-        printf("(format: 勇名 經驗 士兵數 年齡 行動 (0->未 1->完))\n");
-        printf("Type at here -> ");
-        scanf("%hu %hu %hu %hhu %d",&search[0],&search[1],&search[2],&age,&isActive);
+        printf("(format: 勇名 經驗 士兵數 年齡)\n");
+        printf("Type at here ->");
+        scanf("%hu %hu %hu %hhu",&search[0],&search[1],&search[2],&age);
 
         formation = formation_finder("Please enter the target character's formation (use 0 as the end of the input and space as separator): ");
 
@@ -112,7 +111,7 @@ void general(uint8_t* savedata, int32_t nowIdx, uint64_t filesize, int32_t year)
         printf("(1) 年齡: %hhu  (8)  武力: %hhu (13) 士兵數: %hu\n",age,person.mi_force,person.mi);
         printf("(2) 忠誠: %hhu  (9)  智力: %hhu (14) 負傷兵: --\n",person.loyalty,person.intellegence);
         printf("(3) 體力: --    (10) 政治: %hhu (15) 訓練: %hhu\n",person.politic,person.train);
-        printf("(4) 行動: %s    (11) 魅力: %hhu (16) 士氣: %hhu\n",(isActive) ? "完" : "未",person.charm,person.morale);
+        printf("(4) 行動: %s    (11) 魅力: %hhu (16) 士氣: %hhu\n",(person.active == 0) ? "未" : "完",person.charm,person.morale);
         printf("(5) 勇名: %hu   (12) 經驗: %hu\n",person.ym,person.exp);
         printf("(6) 技能: ");
         print_skill(person.skill);
@@ -121,7 +120,7 @@ void general(uint8_t* savedata, int32_t nowIdx, uint64_t filesize, int32_t year)
         printf("(0) 退出\n");
         sleep(1);
         printf("\n");
-        printf("Please choose the value you want to edit: ");
+        printf("Please choose the value you want to edit (行動: 0->未 4->完): ");
         scanf("%d",&choice);
 
         uint8_t modified8 = 0;
@@ -149,7 +148,6 @@ void general(uint8_t* savedata, int32_t nowIdx, uint64_t filesize, int32_t year)
                 _NEW_PAGE_;
                 printf(GREEN_BOLD"Success!\n"RESET);
                 break;
-            case 1:
             case 5:
             case 12:
             case 13:
@@ -167,19 +165,6 @@ void general(uint8_t* savedata, int32_t nowIdx, uint64_t filesize, int32_t year)
                 _NEW_PAGE_;
                 printf(GREEN_BOLD"Success!\n"RESET);
                 break;
-            case 4:
-                if(isActive == 0){
-                    isActive = 1;
-                    savedata[formerIdx+11] += 4;
-                }
-                else{
-                    isActive = 0;
-                    savedata[formerIdx+11] -= 4;
-                }
-                
-                _NEW_PAGE_;
-                printf(GREEN_BOLD"Success!\n"RESET);
-                break;
             default:
                 printf("Please enter the modified value: ");
                 scanf("%hhd",&modified8);
@@ -193,6 +178,7 @@ void general(uint8_t* savedata, int32_t nowIdx, uint64_t filesize, int32_t year)
                 if(choice == 15) memcpy(&savedata[formerIdx+16],&modified8,sizeof(modified8));
                 if(choice == 16) memcpy(&savedata[formerIdx+17],&modified8,sizeof(modified8));
                 
+
                 _NEW_PAGE_;
                 printf(GREEN_BOLD"Success!\n"RESET);
                 break;
@@ -329,8 +315,6 @@ int main(){
     char filename[32] = "";
     uint8_t* savedata = NULL;
     struct stat filestat = {0};
-
-    _NEW_PAGE_;
 
     printf(CYAN_BOLD"Welcome to SAN5PK Savedata Editor!\n"RESET);
     printf(RED"The editor is encoded in UTF-8. Make sure you are using it too.\n"RESET);
