@@ -9,9 +9,13 @@ void max(int32_t a,int32_t b){
 
 int main(){
 
-    int32_t a = -1;
+    int32_t a = 0;
     int32_t b = 0;
 
+    printf("Please enter a and b: ");
+    scanf("%d %d",&a,&b);
+
+    printf("Max: ");
     max(a,b);
 
     return 0;
