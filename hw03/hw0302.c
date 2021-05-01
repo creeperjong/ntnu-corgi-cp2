@@ -176,49 +176,41 @@ int main(){
                 case 2:
                     
                     for(int32_t i = 0;i < 20;i++){
-                        if(ans < team_data[i].goalScored){
-                            ans = team_data[i].goalScored;
-                            ansIdx = i;
-                        }
+                        if(ans < team_data[i].goalScored) ans = team_data[i].goalScored;
                     }
-
-                    printf("%s, %d\n",team_data[ansIdx].name,ans);
+                    for(int32_t i = 0;i < 20;i++){
+                        if(team_data[i].goalScored == ans) printf("%s, %d\n",team_data[i].name,ans);
+                    }
                     
                     break;
                 case 3:
 
                     for(int32_t i = 0;i < 20;i++){
-                        if(ans < team_data[i].redCards){
-                            ans = team_data[i].redCards;
-                            ansIdx = i;
-                        }
+                        if(ans < team_data[i].redCards) ans = team_data[i].redCards;
                     }
-
-                    printf("%s, %d\n",team_data[ansIdx].name,ans);
+                    for(int32_t i = 0;i < 20;i++){
+                        if(team_data[i].redCards == ans) printf("%s, %d\n",team_data[i].name,ans);
+                    }
                     
                     break;
                 case 4:
 
                     for(int32_t i = 0;i < 20;i++){
-                        if(ans < team_data[i].winHome){
-                            ans = team_data[i].winHome;
-                            ansIdx = i;
-                        }
+                        if(ans < team_data[i].winHome) ans = team_data[i].winHome;
                     }
-
-                    printf("%s, %d\n",team_data[ansIdx].name,ans);
+                    for(int32_t i = 0;i < 20;i++){
+                        if(team_data[i].winHome == ans) printf("%s, %d\n",team_data[i].name,ans);
+                    }
                     
                     break;
                 case 5:
 
                     for(int32_t i = 0;i < 20;i++){
-                        if(ans < team_data[i].winAway){
-                            ans = team_data[i].winAway;
-                            ansIdx = i;
-                        }
+                        if(ans < team_data[i].winAway) ans = team_data[i].winAway;
                     }
-
-                    printf("%s, %d\n",team_data[ansIdx].name,ans);
+                    for(int32_t i = 0;i < 20;i++){
+                        if(team_data[i].winAway == ans) printf("%s, %d\n",team_data[i].name,ans);
+                    }
                     
                     break;
                 case 6:
