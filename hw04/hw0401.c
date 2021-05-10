@@ -20,11 +20,12 @@ int main(int argc, char *argv[]){
     int32_t opt_size = 0;
     int32_t opt_help = 0;
     FILE* file_origin = NULL;
+    FILE* file_modified = NULL;
+    FILE* file_recover = NULL;
     char filename_origin[32] = "";
-    char optarg_r[32] = "";
+    char filename_modified[32] = "";
+    char filename_recover[32] = "";
     char input_size[32] = "";
-
-    printf("%d\n",optind);
      
     while( (c = getopt_long(argc,argv,"s:r:",long_options,NULL)) != -1 ){
         switch(c){
@@ -34,7 +35,8 @@ int main(int argc, char *argv[]){
                 break;
             case 'r':
                 opt_r = 1;
-                ridx = optind - 1;
+                strncpy(filename_recover,optarg,32);
+                ridx = optind;
                 break;
             case 'z':
                 opt_size = 1;
@@ -46,12 +48,12 @@ int main(int argc, char *argv[]){
         }
     }
     
+    uint8_t* buf = NULL;
     uint32_t num = 0;
+    int32_t cnt = 0;
     int64_t filesize = 0;
     uint64_t size = 1000;
     char** garbage = NULL;
-    char filename_modified[32] = "";
-    FILE* file_modified = NULL;
 
     if(opt_size) size = (uint64_t)strtol(input_size,garbage,10);
 
@@ -68,12 +70,9 @@ int main(int argc, char *argv[]){
 
         num = (uint32_t)ceil(((double)filesize / size));
 
-        uint8_t* buf = NULL;
         buf = (uint8_t*)malloc(sizeof(uint8_t) * size);
-
+        
         for(uint32_t i = 1;i <= num;i++){
-
-            int32_t cnt = 0;
 
             strncpy(filename_modified,filename_origin,32);
             filename_modified[strlen(filename_modified)] = '.';
@@ -81,11 +80,8 @@ int main(int argc, char *argv[]){
 
             file_modified = fopen(filename_modified,"wb");
 
-            uint8_t offset = strlen(filename_origin) + 6;
-            
-            fwrite(&offset,sizeof(offset),1,file_modified);
-            fwrite(&filename_origin,strlen(filename_origin) + 1,1,file_modified);
             fwrite(&i,sizeof(i),1,file_modified);
+            fwrite(&size,sizeof(size),1,file_modified);
 
             cnt = fread(buf,1,size,file_origin);
             fwrite(buf,1,cnt,file_modified);
@@ -102,15 +98,39 @@ int main(int argc, char *argv[]){
 
     }
 
-    printf("%d\n",optind);
 
     if(opt_r){
-        
+
+        if((file_recover = fopen(filename_recover,"wb")) == NULL){
+            perror("Error");
+            return 0;
+        }
+
+        while(ridx < argc && argv[ridx][0] != '-'){
+            
+            if((file_origin = fopen(argv[ridx],"rb")) == NULL){
+                perror("Error");
+                return 0;
+            }
+
+            fread(&num,sizeof(num),1,file_origin);
+            fread(&size,sizeof(size),1,file_origin);
+
+            buf = (uint8_t*)malloc(sizeof(uint8_t) * size);
+            cnt = fread(buf,1,size,file_origin);
+            printf("%ld\n",size * (num - 1));
+
+            fseek(file_recover,size * (num - 1),SEEK_SET);
+            fwrite(buf,1,cnt,file_recover);
+
+            fclose(file_origin);          
+
+            ridx++;
+            free(buf);
+        }
+
+        fclose(file_origin);
     }
-
-
-
-
 
     return 0;
 }
