@@ -118,7 +118,6 @@ int main(int argc, char *argv[]){
 
             buf = (uint8_t*)malloc(sizeof(uint8_t) * size);
             cnt = fread(buf,1,size,file_origin);
-            printf("%ld\n",size * (num - 1));
 
             fseek(file_recover,size * (num - 1),SEEK_SET);
             fwrite(buf,1,cnt,file_recover);
@@ -129,7 +128,7 @@ int main(int argc, char *argv[]){
             free(buf);
         }
 
-        fclose(file_origin);
+        fclose(file_recover);
     }
 
     return 0;
