@@ -131,5 +131,14 @@ int main(int argc, char *argv[]){
         fclose(file_recover);
     }
 
+    if(opt_help){
+        printf("Split:\n");
+        printf("./hw0401 -s [file] --size [Small File Size]\n");
+        printf("The default small file size is 1000 bytes.\n");
+        printf("Recover:\n");
+        printf("./hw0401 -r [output file] [small files]\n");
+        printf("The input small files may not be in order.\n");
+    }
+
     return 0;
 }
