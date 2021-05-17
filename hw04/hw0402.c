@@ -307,20 +307,20 @@ int main(int argc, char *argv[]){
                                 int32_t foundVariable = 0;
 
                                 if(str[j] == '\'') isString = !isString;
-                                if(str[j] == '"') isString = !isString;
+                                if(str[j] == '"') isString = !isString; //到這裡都跟前面差不多
 
-                                while(var[varIdx].isOccupied == 1){
+                                while(var[varIdx].isOccupied == 1){ //每個字都要確認有沒有可能是變數的開頭，因此要檢查struct array每個宣告過的變數名稱
 
                                     if(strncmp(&str[j],var[varIdx].origin,strlen(var[varIdx].origin)) == 0 && isVar(str,j + strlen(var[varIdx].origin),VAR) && !isString){
-                                        foundVariable = 1;
-                                        fwrite(var[varIdx].modified,sizeof(char),16,output_file);
-                                        j += strlen(var[varIdx].origin) - 1;
+                                        foundVariable = 1;      //上面的條件是分別是 1.符合先前宣告過的名稱 2.確定是一個名稱完全相符的變數 3.不是在字串裡
+                                        fwrite(var[varIdx].modified,sizeof(char),16,output_file);   //寫入亂碼
+                                        j += strlen(var[varIdx].origin) - 1;    //跳過原先的變數，繼續尋找
                                         break;
                                     }
                                     varIdx++;
                                 }
 
-                                if(!foundVariable) fwrite(&str[j],sizeof(char),1,output_file);
+                                if(!foundVariable) fwrite(&str[j],sizeof(char),1,output_file);  //如果這一個字不是變數名稱的開頭，就直接跳過
                             }
 
                         }
