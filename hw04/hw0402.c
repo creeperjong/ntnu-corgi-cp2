@@ -208,7 +208,7 @@ int main(int argc, char *argv[]){
 
     srand(time(0));
 
-    while((c = getopt_long(argc,argv,"l:i:o:h",long_option,NULL)) != -1){
+    while((c = getopt_long(argc,argv,"l:i:o:h",long_option,NULL)) != -1){   //get option
         switch(c){
             case 'l':
                 opt_l = 1;
@@ -245,12 +245,13 @@ int main(int argc, char *argv[]){
             perror("Error");
             return 0;
         }
-        if((tmp_file = fopen("tmp.c","wb+")) == NULL){
+        if((tmp_file = fopen("tmp.c","wb+")) == NULL){  //暫存檔
             perror("Error");
             return 0;
         }
 
-        while((c = fgetc(input_file)) != -1) fputc(c,tmp_file);
+        while((c = fgetc(input_file)) != -1) fputc(c,tmp_file); //先把input裡的內容全部複製到tmp.c，未來就讀取tmp.c裡的內容(為了不要破壞原檔案)
+                                                                //每做完一個level，把output裡的內容複製到tmp.c，下一level就把tmp.c當input，才能累積修改的結果
 
         for(int32_t i = level;i >= 1;i--){
             rewind(tmp_file);
