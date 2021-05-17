@@ -76,12 +76,12 @@ void random_space(FILE* pFile){
     return;
 }
 
-void set_name(char* str, variable* var, int32_t type){
+void set_name(char* str, variable* var, int32_t type){  //搜尋是否有宣告變數或函式，並儲存名稱，為其隨機產生一組名稱
 
     int32_t varIdx = 0;
     char tmp[32] = "";
 
-    for(int32_t i = 0;i < 128;i++){
+    for(int32_t i = 0;i < 128;i++){ //找空的位置，找到了就把index存起來
         if(var[i].isOccupied == 0){
             varIdx = i;
             break;
@@ -89,20 +89,20 @@ void set_name(char* str, variable* var, int32_t type){
     }
 
     for(int32_t i = 0;i < strlen(str);i++){
-        if(strncmp(&str[i],"int",3) == 0 || strncmp(&str[i],"char",4) == 0){
+        if(strncmp(&str[i],"int",3) == 0 || strncmp(&str[i],"char",4) == 0){    //遇到int或char代表可能要宣告變數了
 
             int32_t continueSearch = 0;
             int32_t strIdx = 0;
 
-            memset(var[varIdx].origin,0,sizeof(var[varIdx].origin));
+            memset(var[varIdx].origin,0,sizeof(var[varIdx].origin));    //Initialize
             memset(tmp,0,sizeof(tmp));
             
             if(type == VAR){
 
-                for(int32_t j = i + 4;j < strlen(str);j++){
-                    if(str[j] == ' ' || str[j] == '\n') continue;
-                    if(str[j] == ';' || str[j] == '=' || str[j] == ',' || str[j] == ')') break;
-                    if(str[j] == '('){
+                for(int32_t j = i + 4;j < strlen(str);j++){     //讀int或char後面的字串，有可能是變數名稱
+                    if(str[j] == ' ' || str[j] == '\n') continue;   //因為int和char後面可以塞一堆\n和空格再宣告，所以不用理他
+                    if(str[j] == ';' || str[j] == '=' || str[j] == ',' || str[j] == ')') break; //遇到這些代表變數宣告結束
+                    if(str[j] == '('){  //遇到這個代表這其實是在宣告函式
                         continueSearch = 1;
                         break;
                     }
@@ -111,7 +111,7 @@ void set_name(char* str, variable* var, int32_t type){
                 }
 
             }
-            else{
+            else{   //如果是要讀函式的名字
 
                 for(int32_t j = i + 4;j < strlen(str);j++){
                     if(str[j] == ' ' || str[j] == '\n') continue;
@@ -128,20 +128,20 @@ void set_name(char* str, variable* var, int32_t type){
             
 
             for(int32_t j = 0;j < varIdx;j++){
-                if(strncmp(tmp,var[j].origin,strlen(tmp)) == 0){
+                if(strncmp(tmp,var[j].origin,strlen(tmp)) == 0){    //如果已經有重複的變數名稱就不必再處理，讓他繼續找
                     continueSearch = 1;
                     break;
                 }
             }
-            if(strncmp(tmp,"main",4) == 0) continueSearch = 1;
+            if(strncmp(tmp,"main",4) == 0) continueSearch = 1;  //若讀到main代表是main function，不能做更改
 
-            if(continueSearch) continue;
+            if(continueSearch) continue;    //繼續搜尋可能的變數或函式名稱
 
-            strncpy(var[varIdx].origin,tmp,strlen(tmp));
+            strncpy(var[varIdx].origin,tmp,strlen(tmp));    //存在struct array
 
-            var[varIdx].modified[0] = rand() % 26 + 'a';
+            var[varIdx].modified[0] = rand() % 26 + 'a';    //隨機變數名稱的第一個不能為數字，所以是a-z隨機取一
 
-            for(int32_t j = 1;j < 16;j++){
+            for(int32_t j = 1;j < 16;j++){  //隨機安排名稱
                 int32_t choice = rand() % 62;
 
                 if(choice < 10) var[varIdx].modified[j] = choice + '0';
@@ -149,8 +149,8 @@ void set_name(char* str, variable* var, int32_t type){
                 else if(choice < 62) var[varIdx].modified[j] = choice - 36 + 'a';
             }
 
-            var[varIdx].isOccupied = 1;
-            varIdx++;
+            var[varIdx].isOccupied = 1; //標記此位子已被使用
+            varIdx++;   //移到下一個存名稱的位置
         }
     }
 
@@ -299,7 +299,7 @@ int main(int argc, char *argv[]){
 
                         else{
 
-                            set_name(str,var,VAR);
+                            set_name(str,var,VAR);  //var是一個struct array，定義在18行
                             isString = 0;
                             for(int32_t j = 0;j < strlen(str);j++){
 
