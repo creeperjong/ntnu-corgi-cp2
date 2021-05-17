@@ -397,9 +397,9 @@ int main(int argc, char *argv[]){
                                         char buf[64] = "";
 
                                         num = strtol(&str[j],&end,10);
-                                        multiplicand = rand() % 50;
-                                        multiplier = num / 50;
-                                        remainder = num - 50 * multiplier;
+                                        multiplicand = rand() % 50 + 1;
+                                        multiplier = num / multiplicand;
+                                        remainder = num - multiplicand * multiplier;
                                         
                                         if(remainder >= 0) snprintf(buf,64,"( %ld * %ld + %ld )",multiplicand,multiplier,remainder);
                                         else snprintf(buf,64,"( %ld * %ld - %d )",multiplicand,multiplier,abs(remainder));
