@@ -262,21 +262,21 @@ int main(int argc, char *argv[]){
             switch(i){
                 case 1:
                     memset(str,0,sizeof(str));
-                    get_line(str,tmp_file);
+                    get_line(str,tmp_file); //因為feof的某些缺陷，需要先讀一次字串，再進入迴圈，每次迴圈結束再讀一次
                     while(!feof(tmp_file)){
 
-                        if(str[0] == '#') fwrite(str,strlen(str),1,output_file);
+                        if(str[0] == '#') fwrite(str,strlen(str),1,output_file);    //遇到以#開頭，就直接fwrite(因為我不想處理)
 
                         else{
                         
                             isString = 0;
-                            for(int32_t j = 0;j < strlen(str);j++){
+                            for(int32_t j = 0;j < strlen(str);j++){ //讀每個字元
 
-                                fwrite(&str[j],sizeof(char),1,output_file);
+                                fwrite(&str[j],sizeof(char),1,output_file); //不管怎樣先fwrite
                                 
-                                if(str[j] == '\'') isString = !isString;
+                                if(str[j] == '\'') isString = !isString;    //判斷現在是否是字串並記錄
                                 if(str[j] == '"') isString = !isString;
-                                if(str[j] == ' ' && !isString) random_space(output_file);
+                                if(str[j] == ' ' && !isString) random_space(output_file);   //遇到這些字元，代表後面可以亂塞換行和空格
                                 if(str[j] == '(' && !isString) random_space(output_file);
                                 if(str[j] == ')' && !isString) random_space(output_file);
                                 if(str[j] == ';' && !isString) random_space(output_file);
