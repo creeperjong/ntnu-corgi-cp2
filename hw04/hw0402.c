@@ -26,21 +26,24 @@ void random_space(FILE* pFile);
 void set_name(char* str, variable* var, int32_t type);
 int32_t isVar(char* str, int32_t idx, int32_t type);
 
-void get_line(char* str, FILE* pFile){
+void get_line(char* str, FILE* pFile){  //我們要先得到檔案裡的某一段字串，才能進行處理
+                                        //直覺上會認為只要一直fread，每次一個byte，讀到\n就算結束了
+                                        //但我們沒辦法保證會不會所有程式都在同一行，或是其他狀況，所以要思考其他字元來取代\n的功能(做為一行的結尾)
     
     char c = 0;
     int32_t idx = 0;
 
-    memset(str,0,sizeof(str));
+    memset(str,0,sizeof(str));  //str要準備存分析好的每一行
     
     do{
 
-        fread(&c,sizeof(char),1,pFile);
+        fread(&c,sizeof(char),1,pFile);     //先讀先存，再來檢查是不是我們結尾會出現的字元
         str[idx++] = c;
 
-    }while(c != ';' && c != '}' && c != '{' && c != '>' && !feof(pFile));
+    }while(c != ';' && c != '}' && c != '{' && c != '>' && !feof(pFile));   //這些就是做為代替\n的字元，!feof是為了避免segmentation fault
 
-    if(str[0] == '#'){
+    if(str[0] == '#'){  //若今天讀到的是以#開頭(ex: #include <stdio.h>)，就要繼續讀，直到遇到非空格或換行的字元(像下一行的#)
+                        //若不這樣做，後面就無法用str[0] == '#'來判斷
         
         do{
 
@@ -48,7 +51,7 @@ void get_line(char* str, FILE* pFile){
             if(c == '\n' || c == ' ') str[idx++] = c;
 
         }while(c == '\n' || c == ' ');
-        fseek(pFile,-1,SEEK_CUR);
+        fseek(pFile,-1,SEEK_CUR);   //會多讀一個沒有要讀進str的字元，所以往回1byte
 
     }
 
