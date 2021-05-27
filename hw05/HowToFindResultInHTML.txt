@@ -1,0 +1,12 @@
+author:
+	<span itemprop="name" title=
+Title:
+	<span class="title" itemprop="name">
+Source:
+	<span itemprop="name">
+	<span itemprop="volumeNumber">
+	<span itemprop="issueNumber">
+Page:
+	<span itemprop="pagination">
+Year:
+	<span itemprop="datePublished">

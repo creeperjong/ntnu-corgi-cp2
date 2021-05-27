@@ -20,11 +20,11 @@ int main(){
             return 0;
         }
         fgets(cpuInfo, 128, pFile);
-        printf("%s\n",cpuInfo);
+        //printf("%s\n",cpuInfo);
         sscanf(cpuInfo, "%*s %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld", &time[0], &time[1], &time[2], &time[3], &time[4], &time[5], &time[6], &time[7], &time[8], &time[9]);
 
         for(int32_t i = 0;i < 10;i++) timeSum += time[i];
-        printf("%ld %ld\n", time[3] - preIdle, timeSum - preSum);
+        //printf("%ld %ld\n", time[3] - preIdle, timeSum - preSum);
         printf("CPU usage: %.2lf%%\n", 100.0  - 100.0 * (time[3] - preIdle) / (timeSum - preSum));
 
         preSum = timeSum;
